@@ -6,15 +6,15 @@ import {useState} from "react";
 const initialFriends = [
   {
     id: 118836,
-    name: "Clark",
-    image: "https://i.pravatar.cc/48?u=118836",
-    balance: -7,
+    name: "John",
+    image: "https://i.pravatar.cc/48?u=685940",
+    balance: 0,
   },
   {
     id: 933372,
     name: "Sarah",
     image: "https://i.pravatar.cc/48?u=933372",
-    balance: 20,
+    balance: 0,
   },
   {
     id: 499476,
@@ -48,8 +48,16 @@ function App() {
   }
 
   function handleSelectedFriend(friend) {
-    setSelectedFriend(selectedFriend?.id === friend.id ? null : friend);
+    setSelectedFriend((current) => (current?.id === friend.id ? null : friend));
     setShowAddFriend(false);
+  }
+
+  function handleSplitBill(value) {
+    setFriends((friends) =>
+      friends.map((friend) =>
+        friend.id === selectedFriend.id ? {...friend, balance: friend.balance + value} : friend
+      )
+    );
   }
 
   return (
@@ -64,7 +72,9 @@ function App() {
         <Button onClick={handleShowAddFriend}>{showAddFriend ? "Close" : "Add Friend"}</Button>
       </div>
 
-      {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} />}
+      {selectedFriend && (
+        <FormSplitBill selectedFriend={selectedFriend} onSplitBill={handleSplitBill} />
+      )}
     </div>
   );
 }
@@ -145,14 +155,21 @@ function FormAddFriend({onAddFriend}) {
   );
 }
 
-function FormSplitBill({selectedFriend}) {
+function FormSplitBill({onSplitBill, selectedFriend}) {
   const [bill, setBill] = useState("");
   const [paidByUser, setPaidByUser] = useState("");
   const paidByFriend = bill ? bill - paidByUser : ""; // derived state
   const [whoIsPaying, setWhoIsPaying] = useState("user");
 
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!bill || !paidByUser) return;
+    onSplitBill(whoIsPaying === "user" ? paidByFriend : -paidByUser);
+  }
+
   return (
-    <form className='form-split-bill'>
+    <form className='form-split-bill' onSubmit={handleSubmit}>
       <h2>Split a bill with {selectedFriend.name}</h2>
 
       <label>💰 Bill Value</label>
