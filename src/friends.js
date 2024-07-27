@@ -8,7 +8,7 @@ export const initialFriends = [
   {
     id: 933372,
     name: "Sarah",
-    image: "https://i.pravatar.cc/48?u=933372",
+    image: "https://i.pravatar.cc/48?u=654739",
     balance: 0,
   },
   {
