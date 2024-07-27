@@ -5,7 +5,7 @@ import Button from "./components/Button";
 import FriendsList from "./components/FriendsList";
 import FormAddFriend from "./components/FormAddFriend";
 import FormSplitBill from "./components/FormSplitBill";
-  import {initialFriends} from "./friends";
+import {initialFriends} from "./friends";
 
 /* eslint-disable react/prop-types */
 
