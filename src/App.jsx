@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-vars */
+
+import {useState} from "react";
+
 /* eslint-disable react/prop-types */
 const initialFriends = [
   {
@@ -21,12 +24,31 @@ const initialFriends = [
   },
 ];
 
+// Reusable component
+function Button({onClick, children}) {
+  return (
+    <button className='button' onClick={onClick}>
+      {children}
+    </button>
+  );
+}
+
 function App() {
+  const [showAddFriend, setShowAddFriend] = useState(false);
+
+  function handleShowAddFriend() {
+    setShowAddFriend((prevState) => !showAddFriend);
+  }
+
   return (
     <div className='app'>
       <div className='sidebar'>
         <FriendsList />
+        {showAddFriend && <FormAddFriend />}
+        <Button onClick={handleShowAddFriend}>{showAddFriend ? "Close" : "Add Friend"}</Button>
       </div>
+
+      <FormSplitBill />
     </div>
   );
 }
@@ -51,18 +73,56 @@ function Friend({friend}) {
 
       {friend.balance < 0 && (
         <p className='red'>
-          You owe {friend.name} {friend.balance} ₱
+          You owe {friend.name} {Math.abs(friend.balance)} ₱
         </p>
       )}
       {friend.balance > 0 && (
         <p className='green'>
-          {friend.name} owes you {friend.balance} ₱
+          {friend.name} owes you {Math.abs(friend.balance)} ₱
         </p>
       )}
       {friend.balance === 0 && <p>You and {friend.name} are even</p>}
 
-      <button className='button'>Select</button>
+      <Button>Select</Button>
     </li>
+  );
+}
+
+function FormAddFriend() {
+  return (
+    <form className='form-add-friend'>
+      <label>🧑‍🤝‍🧑 Friend Name</label>
+      <input type='text' />
+      <label>🖼️ Image Url</label>
+      <input type='text' />
+
+      <Button>Add</Button>
+    </form>
+  );
+}
+
+function FormSplitBill() {
+  return (
+    <form className='form-split-bill'>
+      <h2>Split a bill with X</h2>
+
+      <label>💰 Bill Value</label>
+      <input type='number' />
+
+      <label>🕴️ Your expense</label>
+      <input type='number' />
+
+      <label>🧑‍🤝‍🧑 X&apos;s expense</label>
+      <input type='text' disabled />
+
+      <label>🤑 Who is paying the bill?</label>
+      <select>
+        <option value='user'>You</option>
+        <option value='friend'>Friend</option>
+      </select>
+
+      <Button>Add</Button>
+    </form>
   );
 }
 
